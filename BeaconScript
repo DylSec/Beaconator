@@ -1,0 +1,36 @@
+#!/usr/bin/python
+#Sends Flag beacon to broadcast address on ctf Network
+#Needs to be on a timer to run every x minutes
+#Needs to loop through list of static flags
+
+from scapy.all import *
+import time
+import random
+import sys
+
+#scapy first half
+ip=IP(dst="192.168.15.255")
+udp=UDP(sport=1024,dport=69)
+
+#get flags line by line
+flagFile=open('flags.txt')
+try:
+        while True:
+
+                for line in flagFile:
+                        payload=line
+                        packet=ip/udp/payload
+                        send(packet)
+                        #for testing
+                        print payload
+                        #Generate a random number
+                        sleepTime=random.randrange(20, 75, 1)
+                        #Sleep for random seconds
+                        time.sleep(sleepTime)
+                        
+        #restart at beginning of file
+        flagFile.seek(0)
+        
+except KeyboardInterrupt:
+        sys.exit(0)
+
